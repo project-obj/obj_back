@@ -1,0 +1,13 @@
+{
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "extends": ["plugin:prettier/recommended"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "es2022": true
+  },
+  "rules": { "no-var": 1 }
+}
