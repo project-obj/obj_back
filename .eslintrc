@@ -9,5 +9,14 @@
     "commonjs": true,
     "es2022": true
   },
-  "rules": { "no-var": 1 }
+  "rules": { 
+    "no-var": 1 ,
+    "prettier/prettier": [
+      "error",
+      {
+          "endOfLine": "auto"
+      }
+  ]
+  }
+  
 }
