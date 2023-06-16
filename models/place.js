@@ -9,11 +9,9 @@ module.exports = class Place extends Sequelize.Model {
           primaryKey: true,
           autoIncrement: true, //자동 생성
         },
-        user_id: {
-          type: Sequelize.BIGINT,
-        },
+
         category_id: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.STRING(255),
         },
         place_name: {
           type: Sequelize.STRING(255),
@@ -21,17 +19,8 @@ module.exports = class Place extends Sequelize.Model {
         address: {
           type: Sequelize.STRING(255),
         },
-        location: {
-          type: Sequelize.STRING(255),
-        },
-        open_time: {
-          type: Sequelize.STRING(255),
-        },
-        closing_time: {
-          type: Sequelize.STRING(255),
-        },
-        closed_days: {
-          type: Sequelize.STRING(255),
+        cnt: {
+          type: Sequelize.INTEGER,
         },
       },
       {
@@ -43,5 +32,11 @@ module.exports = class Place extends Sequelize.Model {
         paranoid: false, // deletedAt
       },
     );
+  }
+
+  static associate(db) {
+    db.Place.belongsToMany(db.User, {
+      through: 'place_sign',
+    });
   }
 };

@@ -4,12 +4,12 @@ module.exports = class User extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        id: {
+        userid: {
           type: Sequelize.BIGINT,
           primaryKey: true,
           autoIncrement: true, //자동 생성
         },
-        userid: {
+        loginid: {
           type: Sequelize.STRING(50),
         },
         password: {
@@ -31,5 +31,10 @@ module.exports = class User extends Sequelize.Model {
         paranoid: false, // deletedAt
       },
     );
+  }
+  static associate(db) {
+    db.User.belongsToMany(db.Place, {
+      through: 'place_sign',
+    });
   }
 };

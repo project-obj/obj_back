@@ -2,7 +2,7 @@ const userDAO = require('../dao/userDAO');
 const hashUtil = require('../lib/hashUtil');
 
 const service = {
-  //user 등록
+  ////////////////////////////////// 회원가입 서비스 시작  ////////////////////////////////
   async add(params) {
     let inserted = null;
 
@@ -40,18 +40,22 @@ const service = {
       resolve(inserted);
     });
   },
-  //아이디 체크
+  ////////////////////////////////// 회원가입 서비스 끝  ////////////////////////////////
+  ////////////////////////////////// 아이디 체크 서비스 시작  ///////////////////////////
   async idcheck(params) {
     let inserted = null;
-
+    let yesNO = null;
     try {
       inserted = await userDAO.idcheck(params);
-      console.log(`(userService.add) ${JSON.stringify(inserted)}`);
-      if (params.userid === inserted.userid) {
+      console.log(`아이디 확인 ${JSON.stringify(inserted)}`);
+      if (inserted.count > 0) {
         console.log('있는 아이디');
+        yesNO = 'no';
+      } else if (inserted.count == 0) {
+        yesNO = 'ok';
       }
     } catch (err) {
-      console.log(`(userService.add) ${err.toString()}`);
+      console.log(`아이디 체크 ${err.toString()}`);
       return new Promise((resolve, reject) => {
         reject(err);
       });
@@ -59,14 +63,13 @@ const service = {
 
     // 결과값 리턴
     return new Promise((resolve) => {
-      resolve(inserted);
+      resolve(yesNO);
     });
   },
-
-  //로그인
+  ////////////////////////////////// 아이디 체크 서비스 끝  /////////////////////////
+  ////////////////////////////////// 로그인 서비스 시작  ///////////////////////////
   async login(params) {
     let user = null;
-
     try {
       user = await userDAO.selectUser(params);
       console.log(`(userService.login) ${JSON.stringify(user)}`);
@@ -86,8 +89,7 @@ const service = {
         reject(err);
       });
     }
-
-    //비번 비교
+    /////비번 비교  ////
     try {
       const checkPassword = await hashUtil.checkPasswordHash(
         params.password,
@@ -112,6 +114,24 @@ const service = {
       resolve(user);
     });
   },
+  ////////////////////////////////// 로그인 서비스 끝  ///////////////////////////
+  ////////////////////////////////// myDate 서비스 시작  ////////////////////////
+  async getMyData(data) {
+    let result = null;
+
+    try {
+      result = await userDAO.getMyData(data);
+      console.log(result);
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+    return new Promise((resolve) => {
+      resolve(result);
+    });
+  },
+  ////////////////////////////////// myDate 서비스 끝  ////////////////////////
 };
 
 module.exports = service;
