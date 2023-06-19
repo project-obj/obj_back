@@ -12,15 +12,6 @@ const dao = {
         .catch((err) => {
           reject(err);
         });
-      // Place.increment({ cnt: 1 }, { where: { place_name: params.place_name } })
-      //   .then(([updated]) => {
-      //     console.log('수정 성공: ', updated);
-      //     resolve({ updatedCount: updated });
-      //   })
-      //   .catch((err) => {
-      //     console.log('수정 실패: ', err);
-      //     reject(err);
-      //   });
     });
   },
   /////////////////////////////// 장소등록 DAO 끝  ///////////////////////////////////
@@ -109,6 +100,35 @@ const dao = {
         });
     });
   },
+  /////////////////////////////// 삭제 후 중복 갯수 DAO 끝  ////////////////////////////////
+  ///////////////////////////// 잴 많이 등록된 곳 서비스 시작  /////////////////////////////
+  placeMax() {
+    return new Promise((resolve, reject) => {
+      Place.max('cnt')
+        .then((maxValue) => {
+          let maxName = Place.findOne({
+            attributes: ['place_name', 'cnt'],
+            where: { cnt: maxValue },
+          });
+          resolve(maxName);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+      // Place.findAndCountAll({
+      //   attributes: ['place_name'],
+      // })
+      //   .then((selectOne) => {
+      //     resolve(selectOne);
+      //     console.log(result.count);
+      //     console.log(result.rows);
+      //   })
+      //   .catch((err) => {
+      //     reject(err);
+      //   });
+    });
+  },
+  ///////////////////////////// 잴 많이 등록된 곳 서비스 끝  //////////////////////////////
 };
-/////////////////////////////// 삭제 후 중복 갯수 DAO 끝  ////////////////////////////////
+
 module.exports = dao;

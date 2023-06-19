@@ -4,12 +4,14 @@ module.exports = class Place extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        place_id: {
+        id: {
           type: Sequelize.BIGINT,
           primaryKey: true,
           autoIncrement: true, //자동 생성
         },
-
+        userid: {
+          type: Sequelize.BIGINT,
+        },
         category_id: {
           type: Sequelize.STRING(255),
         },
@@ -35,8 +37,22 @@ module.exports = class Place extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Place.belongsToMany(db.User, {
-      through: 'place_sign',
-    });
+    Place.associate = (models) => {
+      /**
+       * Place안에 있는 "id값"을 "place_id 라는 컬럼 이름"으로 Place모델에 새로운 컬럼으로 추가한다.
+       */
+      db.Place.hasOne(db.User, {
+        foreignKey: 'place_id',
+        sourceKey: 'id',
+      });
+
+      /**
+       *  Place모델 안에 "user_id라는 컬럼 이름"으로 Place모델에 있는 "id값"을 새로운 컬럼으로 추가한다.
+       */
+      db.Place.belongsTo(db.User, {
+        foreignKey: 'user_id',
+        sourceKey: 'id',
+      });
+    };
   }
 };

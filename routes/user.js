@@ -114,10 +114,12 @@ router.get('/detail?:id', async (req, res) => {
 router.put('/update?:id', async (req, res) => {
   try {
     const myData = {
-      name: req.body.name,
-      email: req.body.email,
+      loginid: req.query.userid,
+      name: req.query.name,
+      email: req.query.email,
     };
-    const result = await userService.myDateUP(params);
+    console.log(myData.loginid);
+    const result = await userService.myDateUP(myData);
     console.log(`정보 업뎃 ${JSON.stringify(result)}`);
 
     // 최종 응답
@@ -127,4 +129,23 @@ router.put('/update?:id', async (req, res) => {
   }
 });
 /////////////////////////////////// 내정보 업뎃 끝  ////////////////////////////
+/////////////////////////////// 내가 등록한 곳 시작 ////////////////////////////
+router.get('/myPlace?:id', async (req, res) => {
+  let myPlace = null;
+  //유저 pk userid 가져오기
+  let userPK = null;
+
+  try {
+    userPK = await userService.getMyData(req.body.loginid);
+    // console.log(`유저 라우터 :  ${userPK.id}`);
+
+    myPlace = await userService.myPlace(userPK.id);
+    console.log(`내가 등록한 곳 :  ${JSON.stringify(myPlace)}`);
+    res.status(200).json(myPlace);
+  } catch (err) {
+    res.status(500).json({ err: err.toString() });
+  }
+});
+/////////////////////////////// 내가 등록한 곳 끝 /////////////////////////////
+
 module.exports = router;

@@ -7,6 +7,7 @@ const { loginCheck } = require('../lib/middleware');
 router.post('/add', async (req, res) => {
   try {
     const params = {
+      userid: req.body.userid,
       category_id: req.body.category_id,
       place_name: req.body.place_name,
       address: req.body.address,
@@ -60,4 +61,15 @@ router.delete('/delete?:id', async (req, res) => {
   }
 });
 ///////////////////////////////  장소 삭제 끝 ///////////////////////////////
+/////////////////////////// 잴 많이 등록된 곳 시작 //////////////////////////
+router.get('/max', async (req, res) => {
+  let placeMax = null;
+  try {
+    placeMax = await placeService.placeMax();
+    res.status(200).json(placeMax);
+  } catch (err) {
+    res.status(500).json({ err: err.toString() });
+  }
+});
+/////////////////////////// 잴 많이 등록된 곳 끝 ///////////////////////////
 module.exports = router;

@@ -118,7 +118,7 @@ const service = {
   ////////////////////////////////// myDate 서비스 시작  ////////////////////////
   async getMyData(data) {
     let result = null;
-
+    console.log(data);
     try {
       result = await userDAO.getMyData(data);
       console.log(result);
@@ -132,6 +132,39 @@ const service = {
     });
   },
   ////////////////////////////////// myDate 서비스 끝  ////////////////////////
+  //////////////////////////// 내정보 업뎃 서비스 시작  ////////////////////////
+  async myDateUP(data) {
+    let result = null;
+
+    try {
+      result = await userDAO.myDateUP(data);
+      console.log(result);
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+    return new Promise((resolve) => {
+      resolve(result);
+    });
+  },
+  //////////////////////////// 내정보 업뎃 서비스 끝  ////////////////////////
+  //////////////////////// 내가 등록한 곳 서비스 시작 ////////////////////////
+  async myPlace(data) {
+    console.log(`유저 서비스 :  ${data}`);
+    let result = null;
+    try {
+      result = await userDAO.myPlace(data);
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+    return new Promise((resolve) => {
+      resolve(result);
+    });
+  },
+  //////////////////////// 내가 등록한 곳 서비스 끝 /////////////////////////
 };
 
 module.exports = service;

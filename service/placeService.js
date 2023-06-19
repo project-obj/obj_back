@@ -9,6 +9,7 @@ const service = {
       ...params,
       cnt: 0,
     };
+    console.log(`장소등록 서비스: ${JSON.stringify(newParams)}`);
     try {
       inserted = await palceDAO.placeAdd(newParams);
     } catch (err) {
@@ -113,6 +114,23 @@ const service = {
       resolve(result);
     });
   },
+  ////////////////////// 삭제카운트 감소 서비스 끝  ////////////////////////
+  /////////////////// 잴 많이 등록된 곳 서비스 시작  ///////////////////////
+  async placeMax() {
+    let result = null;
+    try {
+      result = await palceDAO.placeMax();
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+    //결과 리턴
+    return new Promise((resolve) => {
+      resolve(result);
+    });
+  },
+  /////////////////// 잴 많이 등록된 곳 서비스 끝  ////////////////////////
 };
-////////////////////// 삭제카운트 감소 서비스 끝  ////////////////////////
+
 module.exports = service;

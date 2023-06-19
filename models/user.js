@@ -4,7 +4,7 @@ module.exports = class User extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        userid: {
+        id: {
           type: Sequelize.BIGINT,
           primaryKey: true,
           autoIncrement: true, //자동 생성
@@ -32,9 +32,14 @@ module.exports = class User extends Sequelize.Model {
       },
     );
   }
+
   static associate(db) {
-    db.User.belongsToMany(db.Place, {
-      through: 'place_sign',
+    /**
+     * User안에 있는 "id값"을 "userid 라는 컬럼 이름"으로 Place모델에 새로운 컬럼으로 추가한다.
+     */
+    User.hasMany(db.Place, {
+      foreignKey: 'userid',
+      sourceKey: 'id',
     });
   }
 };
