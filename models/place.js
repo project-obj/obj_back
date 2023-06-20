@@ -21,6 +21,15 @@ module.exports = class Place extends Sequelize.Model {
         address: {
           type: Sequelize.STRING(255),
         },
+        roadAddress: {
+          type: Sequelize.STRING(255),
+        },
+        lat: {
+          type: Sequelize.STRING(255),
+        },
+        lng: {
+          type: Sequelize.STRING(255),
+        },
         cnt: {
           type: Sequelize.INTEGER,
         },

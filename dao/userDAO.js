@@ -1,9 +1,10 @@
 const { where } = require('sequelize');
 const { User, Place } = require('../models/index');
-
+const sequelize = require('sequelize');
 const dao = {
   ////////////////////////////////// 회원가입 DAO 시작  ///////////////////////////
   userAdd(params) {
+    console.log(`회원가입 DAO :  ${JSON.stringify(params)}`);
     return new Promise((resolve, reject) => {
       User.create(params)
         .then((inserted) => {
@@ -50,7 +51,7 @@ const dao = {
   ////////////////////////////////// 로그인 DAO 끝  ////////////////////////
   ////////////////////////////////// myDate DAO 시작  /////////////////////
   getMyData(data) {
-    // console.log('dao' + data);
+    console.log('마이 데이터 dao : ' + data);
     return new Promise((resolve, reject) => {
       User.findOne({
         attributes: ['id', 'loginid', 'name', 'email'],
@@ -67,7 +68,7 @@ const dao = {
   ////////////////////////////////// myDate DAO 시작  /////////////////////
   ////////////////////////////// 내정보 업뎃 DAO 시작  ////////////////////
   myDateUP(data) {
-    console.log(data.name);
+    console.log(`내정보 업뎃 DAO :  ${JSON.stringify(data)}`);
     return new Promise((resolve, reject) => {
       User.update(
         { name: data.name, email: data.email },
@@ -86,7 +87,7 @@ const dao = {
   ////////////////////////////// 내정보 업뎃 DAO 끝  /////////////////////
   //////////////////////// 내가 등록한 곳 DAO 시작 ///////////////////////
   async myPlace(data) {
-    console.log(`유저 dao :  ${data}`);
+    console.log(`내가 등록한 곳 dao :  ${data}`);
     try {
       const myPlace = await User.findByPk(data, {
         attributes: ['loginid', 'name'], // 내 테이블 데이터
@@ -94,8 +95,15 @@ const dao = {
           {
             model: Place,
             as: 'Places', //디비에 있는 테이블명 모델 만들때 복수형 안되게 설정
+            attributes: [
+              'id',
+              'place_name',
+              'address',
+              'roadAddress',
+              'lat',
+              'lng',
+            ], // join 테이블 데이터
             where: { userid: data },
-            attributes: ['place_name'], // join 테이블 데이터
           },
         ],
       });

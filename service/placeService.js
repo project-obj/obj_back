@@ -26,11 +26,11 @@ const service = {
   /////////////////////////////// 장소등록 서비스 끝  ///////////////////////////////////
   /////////////////////////////// 등록시 중복장소 갯수 서비스 시작  //////////////////////
   async palceCount(data) {
-    console.log(`장소 서비스 : ${data}`);
+    console.log(`중복장소 서비스 : ${data}`);
     let result = null;
     try {
       result = await palceDAO.palceCount(data);
-      console.log(`장소 서비스 : ${data}`);
+      //      console.log(`장소 서비스 : ${data}`);
     } catch (err) {
       return new Promise((resolve, reject) => {
         reject(err);
@@ -42,6 +42,25 @@ const service = {
     });
   },
   ////////////////////// 등록시 중복장소 갯수 서비스 끝  ////////////////////////
+  ////////////////////// 등록시 내꺼 중복장소 갯수 서비스 시작  ///////////////////////
+  async my(data) {
+    console.log(`내꺼 중복장소 서비스 : ${data}`);
+    let result = null;
+    try {
+      result = await palceDAO.my(data);
+      //      console.log(`장소 서비스 : ${data}`);
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+    // 결과값 리턴
+    return new Promise((resolve) => {
+      resolve(result);
+    });
+  },
+
+  ////////////////////// 등록시 내꺼 중복장소 갯수 서비스 끝  ////////////////////////
   ////////////////////// 중복저장 카운트 증가 서비스 시작  //////////////////////
   async addCount(data) {
     let result = null;
@@ -125,6 +144,7 @@ const service = {
         reject(err);
       });
     }
+
     //결과 리턴
     return new Promise((resolve) => {
       resolve(result);

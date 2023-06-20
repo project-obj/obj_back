@@ -1,5 +1,5 @@
 const { Place } = require('../models/index');
-
+const sequelize = require('sequelize');
 const dao = {
   /////////////////////////////// 장소등록 DAO 시작  ///////////////////////////////////
   placeAdd(params) {
@@ -51,6 +51,24 @@ const dao = {
     });
   },
   /////////////////////////////// 등록시 중복된 곳 확인 DAO 끝  ///////////////////////
+  /////////////////////////////// 등록시 내꺼 중복된 곳 확인 DAO 시작  ////////////////////////////////
+  my(params) {
+    console.log(`장소 DAO : ${params}`);
+    return new Promise((resolve, reject) => {
+      Place.findAndCountAll({
+        attributes: ['place_name'],
+        where: { place_name: params },
+      })
+        .then((selectPlace) => {
+          resolve(selectPlace);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  /////////////////////////////// 등록시 내꺼 중복된 곳 확인 DAO 시작  ////////////////////////////////
   /////////////////////////////// 장소 삭제 DAO 시작  ////////////////////////////////
   placeDelete(params) {
     return new Promise((resolve, reject) => {
@@ -101,34 +119,51 @@ const dao = {
     });
   },
   /////////////////////////////// 삭제 후 중복 갯수 DAO 끝  ////////////////////////////////
-  ///////////////////////////// 잴 많이 등록된 곳 서비스 시작  /////////////////////////////
+  ///////////////////////////// 잴 많이 등록된 곳 DAO 시작  /////////////////////////////
   placeMax() {
     return new Promise((resolve, reject) => {
-      Place.max('cnt')
-        .then((maxValue) => {
-          let maxName = Place.findOne({
-            attributes: ['place_name', 'cnt'],
-            where: { cnt: maxValue },
-          });
-          resolve(maxName);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-      // Place.findAndCountAll({
-      //   attributes: ['place_name'],
-      // })
-      //   .then((selectOne) => {
-      //     resolve(selectOne);
-      //     console.log(result.count);
-      //     console.log(result.rows);
+      // Place.max('cnt')   //최대값 하나만
+      //   .then((maxValue) => {
+      //     let maxName = Place.findAll({
+      //       attributes: [
+      //         sequelize.fn('distinct', sequelize.col('place_name')), //중복제거
+      //         'place_name',
+      //         'cnt',
+      //         'address',
+      //         'roadAddress',
+      //         'lat',
+      //         'lng',
+      //       ],
+      //       where: { cnt: maxValue },
+      //       order: [['cnt', 'desc']],
+      //     });
+      //     resolve(maxName);
       //   })
       //   .catch((err) => {
       //     reject(err);
       //   });
+
+      Place.findAll({
+        attributes: [
+          sequelize.fn('distinct', sequelize.col('place_name')), //중복제거
+          'place_name',
+          'cnt',
+          'address',
+          'roadAddress',
+          'lat',
+          'lng',
+        ],
+        order: [['cnt', 'desc']],
+      })
+        .then((selectPlace) => {
+          resolve(selectPlace);
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   },
-  ///////////////////////////// 잴 많이 등록된 곳 서비스 끝  //////////////////////////////
+  ///////////////////////////// 잴 많이 등록된 곳 DAO 끝  //////////////////////////////
 };
 
 module.exports = dao;

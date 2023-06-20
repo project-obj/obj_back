@@ -2,6 +2,7 @@ let createError = require('http-errors');
 let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
+// 요청과 응답에 쿠키를 허용하고 싶을 경우 : "Credentials": true 서버, 프론트 둘다
 let indexRouter = require('./routes/index');
 
 const bodyParser = require('body-parser');
@@ -38,7 +39,7 @@ models.sequelize
     console.log('DB Connection fail', err);
   });
 
-app.use(cors(corsConfig));
+app.use(cors(corsConfig)); //cors설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

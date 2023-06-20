@@ -1,24 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const placeService = require('../service/placeService');
-const { loginCheck } = require('../lib/middleware');
-//장소등록 로그인 미들웨어// ('/placeAdd', loginCheck, async (req, res) =>
+const userService = require('../service/userService');
+const { isLoggedIn } = require('../lib/middleware');
+
 ///////////////////////////////  장소 등록 시작 /////////////////////////////
-router.post('/add', async (req, res) => {
+router.post('/add', isLoggedIn, async (req, res) => {
+  console.log(`장소등록  : ${JSON.stringify(req.body.userid)}`);
+  let userPK = null;
+
   try {
+    //유저 pk userid 가져오기
+    userPK = await userService.getMyData(req.body.userid);
+    console.log('console.log(userPK);' + userPK);
     const params = {
-      userid: req.body.userid,
+      userid: userPK.id,
       category_id: req.body.category_id,
       place_name: req.body.place_name,
       address: req.body.address,
+      roadAddress: req.body.roadAddress,
+      lat: req.body.lat,
+      lng: req.body.lng,
     };
+    //  console.log(`장소등록 라우터 : ${JSON.stringify(params)}`);
+    //장소 등록시 내 장소 중복 확인
+    const my = await placeService.my(params.place_name);
+    console.log('중복 저장' + my.count);
+    if (my.count != 0) {
+      console.log('중복 저장');
+      res.send({ success: false });
+      return;
+    }
     //장소 등록
     const result = await placeService.placeAdd(params);
-    console.log(`장소등록 : ${JSON.stringify(result)}`);
 
     //장소 등록시 중복 장소 확인
     const placeCount = await placeService.palceCount(params.place_name);
-    console.log(`중복장소 : ${placeCount.count}`);
+    console.log(`중복장소 : ${placeCount.place_name}`);
+
     //중복 장소 카운트 증가
     const data = {
       cnt: placeCount.count,
@@ -34,15 +53,16 @@ router.post('/add', async (req, res) => {
 });
 ////////////////////////////////  장소 등록 끝 /////////////////////////////////
 ////////////////////////////////  장소 삭제 시작 ///////////////////////////////
-router.delete('/delete?:id', async (req, res) => {
+router.delete('/delete?:id', isLoggedIn, async (req, res) => {
+  console.log(`장소삭제 라우터 : ${req.body.place_id}`);
   try {
     const params = {
-      place_id: req.body.place_id,
+      id: req.body.place_id,
     };
-    console.log(`장소삭제 할거 : ${JSON.stringify(params)}`);
-    //삭제 정보 받아옴
+    //    console.log(`장소삭제 할거 : ${JSON.stringify(params)}`);
+    //삭제 정보 받아옴(카운트 업뎃하려고)
     const deleteData = await placeService.deleteData(params);
-    console.log('삭제할거 정보' + deleteData.place_name);
+    //    console.log('삭제할거 정보' + deleteData.place_name);
     //서비스로 전달
     const result = await placeService.placeDelete(params);
     //삭제시 중복 장소 갯수 받아옴
@@ -62,11 +82,11 @@ router.delete('/delete?:id', async (req, res) => {
 });
 ///////////////////////////////  장소 삭제 끝 ///////////////////////////////
 /////////////////////////// 잴 많이 등록된 곳 시작 //////////////////////////
-router.get('/max', async (req, res) => {
-  let placeMax = null;
+router.get('/rank', async (req, res) => {
+  let placeRank = null;
   try {
-    placeMax = await placeService.placeMax();
-    res.status(200).json(placeMax);
+    placeRank = await placeService.placeMax();
+    res.status(200).json(placeRank);
   } catch (err) {
     res.status(500).json({ err: err.toString() });
   }
