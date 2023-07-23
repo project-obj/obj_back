@@ -80,6 +80,7 @@ const service = {
   ////////////////////// 중복저장 카운트 증가 서비스 끝  ////////////////////////
   ////////////////////// 삭제할거 정보 받아옴 서비스 시작  //////////////////////
   async deleteData(params) {
+    console.log(`삭제 데이터 : ${params}`);
     let data = null;
     try {
       data = await palceDAO.deleteData(params);

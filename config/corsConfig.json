@@ -1,5 +1,5 @@
 {
-  "origin": ["http://localhost:3000", "http://192.168.0.37:3000"],
+  "origin": ["http://localhost:3000", "http://192.168.0.37:3000","http://192.168.0.33:3000"],
   "methods": ["OPTIONS", "GET", "POST", "HEAD", "PUT", "DELETE"],
   "credentials": true 
 }

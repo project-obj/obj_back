@@ -48,11 +48,12 @@ const service = {
     let yesNO = null;
     try {
       inserted = await userDAO.idcheck(params);
-      //      console.log(`아이디 확인 ${JSON.stringify(inserted)}`);
+      console.log(`아이디 확인 서비스 : ${JSON.stringify(inserted)}`);
       if (inserted.count > 0) {
         console.log('있는 아이디');
         yesNO = 'no';
       } else if (inserted.count == 0) {
+        console.log('없는 아이디');
         yesNO = 'ok';
       }
     } catch (err) {
@@ -118,10 +119,10 @@ const service = {
   ////////////////////////////////// myDate 서비스 시작  ////////////////////////
   async getMyData(data) {
     let result = null;
-    console.log('내 정보 서비스 : ' + data);
+    console.log('내 정보 서비스 : ' + JSON.stringify(data));
     try {
       result = await userDAO.getMyData(data);
-      //      console.log(result);
+      console.log('내 정보 서비스 myDate result : ' + result);
     } catch (err) {
       return new Promise((resolve, reject) => {
         reject(err);
@@ -152,7 +153,7 @@ const service = {
   //////////////////////////// 내정보 업뎃 서비스 끝  ////////////////////////
   //////////////////////// 내가 등록한 곳 서비스 시작 ////////////////////////
   async myPlace(data) {
-    console.log(`내가 등록한 곳 서비스 :  ${data}`);
+    console.log(`내가 등록한 곳 서비스 :  ${JSON.stringify(data)}`);
     let result = null;
     try {
       result = await userDAO.myPlace(data);
@@ -166,6 +167,17 @@ const service = {
     });
   },
   //////////////////////// 내가 등록한 곳 서비스 끝 /////////////////////////
+  //////////////////////// refresToken 저장 서비스 시작 /////////////////////////
+  async refresTokenSave(data) {
+    try {
+      await userDAO.refresTokenSave(data);
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+  },
+  //////////////////////// refresToken 저장 서비스 끝 /////////////////////////
 };
 
 module.exports = service;

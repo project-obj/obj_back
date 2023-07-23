@@ -61,7 +61,12 @@ module.exports = class Place extends Sequelize.Model {
       db.Place.belongsTo(db.User, {
         foreignKey: 'user_id',
         sourceKey: 'id',
+        //       as: 'User',
       });
     };
+    // db.Place.hasMany(db.Visit, {
+    //   foreignKey: 'place_name',
+    //   sourceKey: 'id',
+    // });
   }
 };

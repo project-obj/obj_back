@@ -21,6 +21,9 @@ module.exports = class User extends Sequelize.Model {
         email: {
           type: Sequelize.STRING(255),
         },
+        refres_token: {
+          type: Sequelize.STRING(255),
+        },
       },
       {
         sequelize,
@@ -40,6 +43,12 @@ module.exports = class User extends Sequelize.Model {
     User.hasMany(db.Place, {
       foreignKey: 'userid',
       sourceKey: 'id',
+      //     as: 'Place',
+    });
+    User.hasMany(db.Visit, {
+      foreignKey: 'userid',
+      sourceKey: 'id',
+      as: 'Visit',
     });
   }
 };
